@@ -4,28 +4,32 @@
       <AddTask />
       <p v-if="incompleteTasks.length == 0">No tasks available yet</p>
       <div class="tasks-list">
-        <li v-for="task in incompleteTasks" :key="task.id">
+        <li class="task-item" v-for="task in incompleteTasks" :key="task.id">
+          <span>
           <input 
             type="checkbox" 
             :checked="task.completed" 
             @change="toggleTaskCompletion(task.id)" 
           />
           <span>{{ task.title }}</span>
-          <span class="material-symbols-outlined" @click="deleteTask(task.id)">delete</span>
+          </span>
+          <span class="material-symbols-outlined delete-icon" @click="deleteTask(task.id)">delete</span>
         </li>
       </div>
-      <h3 style="margin: 0">Completed Tasks</h3>
+      <h3 style="margin: 1rem 0 0">Completed Tasks</h3>
       <hr/>
       <p v-if="completedTasks.length == 0">No tasks completed yet</p>
       <div class="tasks-list">
-        <li v-for="task in completedTasks" :key="task.id">
+        <li class="task-item" v-for="task in completedTasks" :key="task.id">
+          <span>
           <input 
           type="checkbox" 
           :checked="task.completed" 
           @change="toggleTaskCompletion(task.id)" 
           />
-          <span>{{ task.title }}</span>
-          <span class="material-symbols-outlined" @click="deleteTask(task.id)">delete</span>
+          <span class="task-title">{{ task.title }}</span>
+          </span>
+          <span class="material-symbols-outlined delete-icon" @click="deleteTask(task.id)">delete</span>
         </li>
       </div>
     </div>
@@ -68,6 +72,7 @@ export default {
   padding: 20px;
   width: 30%;
   min-width: 30rem;
+  margin: auto;
 }
 
 h2, h3 {
@@ -89,41 +94,42 @@ h2, h3 {
 .tasks-list {
   list-style-type: none;
   padding: 0;
-}
-
-.task-item {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  background-color: #1f1f1f;
-  margin: 5px 0;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
-}
-
-.task-item:hover {
-  background-color: #333333;
-}
-
-input[type="checkbox"] {
-  margin-right: 15px;
-  cursor: pointer;
-}
-
-.completed-task {
-  text-decoration: line-through;
-  color: #aaa;
-}
-
-.delete-icon {
-  margin-left: auto;
-  cursor: pointer;
-  color: #ff5555;
-  font-size: 20px;
-}
-
-.delete-icon:hover {
-  color: #ff0000;
+  .task-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #1f1f1f;
+    margin: 5px 0;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    &:hover {
+      background-color: #333333;
+    }
+    span {
+      display: flex; 
+      align-items: center; 
+    }
+    input[type="checkbox"] {
+      margin-right: 15px;
+      width: 20px; 
+      height: 20px; 
+      accent-color: black; 
+      cursor: pointer;
+    }
+    .completed-task {
+      color: #aaa;
+    }
+    .task-title{
+      text-decoration: line-through;
+    }
+    .delete-icon {
+      font-size: 20px;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
 }
 
 p {

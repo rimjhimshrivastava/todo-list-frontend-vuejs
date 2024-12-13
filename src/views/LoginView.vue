@@ -1,9 +1,8 @@
 <template>
     <div>
-      <h2>Log In</h2>
       <form @submit.prevent="handleSubmit">
+        <h2>Log In</h2>
         <div>
-          <label for="username">Username:</label>
           <input
             type="text"
             id="username"
@@ -13,7 +12,6 @@
           />
         </div>
         <div>
-          <label for="password">Password:</label>
           <input
             type="password"
             id="password"
@@ -22,9 +20,7 @@
             required
           />
         </div>
-        <div>
-          <button type="submit">Log In</button>
-        </div>
+        <button type="submit">Log In</button>
       </form>
       <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
     </div>
@@ -48,7 +44,6 @@
     methods: {
       ...mapActions(['login']),
       handleSubmit() {
-        //logic for login, also deal with invalid login credentials
         let token = {
           username:this.username,
           password:this.password
@@ -63,3 +58,71 @@
   };
   </script>
   
+  <style lang="scss" scoped>
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  h2 {
+    color: white;
+    font-size: 2rem;
+    margin: 0.5rem 0;
+    padding: 0;
+  }
+  
+  form {
+    background-color: #1f1f1f;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+    padding: 1rem 2rem;
+    margin-top: 2rem;
+    div {
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+  
+      input {
+        background: none;
+        border: none;
+        border-bottom: 1px solid white;
+        padding: 10px 0;
+        color: white;
+        font-size: 1rem;
+        width: 100%;
+        &::placeholder {
+          color: grey;
+        }
+        &:focus {
+          border-color: grey;
+          outline: none;
+        }
+      }
+    }
+  
+    button {
+      background: none;
+      border: 2px solid white;
+      color: white;
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      width: 100%;
+      &:hover {
+        background-color: white;
+        color: black;
+      }
+    }
+  }
+  
+  p {
+    margin-top: 10px;
+    color: red;
+    font-size: 1rem;
+  }
+  
+  </style>
