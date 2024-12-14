@@ -13,3 +13,8 @@
 1. Access link https://bespoke-puffpuff-4433b9.netlify.app
 2. Create a new account or login to existing one
 3. Manage your todos and boost your productivity!
+
+##### Installation
+- npm install
+- Build: npm run build
+- npm run serve
