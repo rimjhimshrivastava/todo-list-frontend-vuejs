@@ -1,3 +1,4 @@
+import apiClient from './axios';
 import { createStore } from 'vuex'; 
 
 const store = createStore({
@@ -24,39 +25,83 @@ const store = createStore({
     },
   },
   actions: {
-    login({ commit }, token) {
-        //implement api logic to get tasks list from db
-        const tasks = []
-        commit('setLoginState', { isLoggedIn: true, token });
-        commit('setTasksList', tasks);
+    async signup({ commit }, token){
+      try{
+        const response = await apiClient.post('/auth/signup', token);
+        commit('setLoginState', { isLoggedIn: true, token: response.data.accessToken });
+      } catch(error){
+        if (error.response && error.response.data && error.response.data.message) {
+          console.error("ERROR in signup: ", error.response.data.message);
+          return error.response.data.message; 
+        } else {
+          console.error("Unexpected error: ", error);
+          return 'An unexpected error occurred'; 
+        }
+      }
+    },
+    async login({ commit }, token) {
+      try{
+        const response = await apiClient.post('/auth/login', token);
+        commit('setLoginState', { isLoggedIn: true, token: response.data.accessToken });
+      } catch(error){
+        if (error.response && error.response.data && error.response.data.message) {
+          console.error("ERROR in signup: ", error.response.data.message);
+          return error.response.data.message; 
+        } else {
+          console.error("Unexpected error: ", error);
+          return 'An unexpected error occurred'; 
+        }
+      }
     },
     logout({ commit }) {
         commit('setLoginState', { isLoggedIn: false, token: null });
         commit('setTasksList', []); 
     },
-    addNewTask({ state, commit }, task) {
-        //implement api logic to upload new task in db
-      const newTask = { id: Date.now(), title: task, completed: false };
-      const updatedTasks = [...state.tasksList, newTask];
-      commit('setTasksList', updatedTasks);
+    async getAllTask({ commit }){
+      try{
+        const response = await apiClient.get('/todo');
+        commit('setTasksList', response.data.todos)
+      } catch(error) {
+        console.log("Error in fetching tasks:", error)
+        return error;
+      }
     },
-    toggleTaskCompletion({ state, commit }, taskId) {
-        //implement api logic to update tasks in db
-      const updatedTasks = state.tasksList.map((task) =>
-        task.id === taskId ? { ...task, completed: !task.completed } : task
-      );
-      commit('setTasksList', updatedTasks);
+    async addNewTask({ commit }, task) {
+      try{
+        const response = await apiClient.post('/todo', {title: task})
+        commit('setTasksList', response.data.todos);
+      }
+      catch(error){
+        console.log("Error in adding task: ", error)
+        return error;
+      }
     },
-    deleteTask({ state, commit }, taskId) {
-        //implement api logic to update tasks in db
-      const updatedTasks = state.tasksList.filter((task) => task.id !== taskId);
-      commit('setTasksList', updatedTasks);
+    async toggleTaskCompletion({ commit }, taskId) {
+      try{
+        const response = await apiClient.put(`/todo/${taskId}`)
+        commit('setTasksList', response.data.todos);
+      }
+      catch(error){
+        console.log("Error in toggle task: ", error)
+        return error;
+      }
+    },
+    async deleteTask({ commit }, taskId) {
+      try{
+        const response = await apiClient.delete(`/todo/${taskId}`)
+        commit('setTasksList', response.data.todos);
+      }
+      catch(error){
+        console.log("Error in delete task: ", error)
+        return error;
+      }
     },
   },
   getters: {
     isUserLoggedIn: (state) => state.isUserLoggedIn,
     completedTasks: (state) => state.tasksList.filter((task) => task.completed),
     incompleteTasks: (state) => state.tasksList.filter((task) => !task.completed),
+    getAccessToken: (state) => state.token,
   },
 });
 

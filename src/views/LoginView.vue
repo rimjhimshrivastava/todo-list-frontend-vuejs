@@ -43,18 +43,26 @@
     },
     methods: {
       ...mapActions(['login']),
-      handleSubmit() {
+      async handleSubmit() {
         let token = {
           username:this.username,
           password:this.password
         }
-        this.login(token)
+        let result = await this.login(token)
         this.username = '';
         this.password = '';
-        this.errorMessage = '';
-        this.$router.push('/');
+        this.errorMessage = result;
+        if(!result) {
+          this.errorMessage = '';
+          this.$router.push('/');
+        }
       }
     },
+    mounted(){
+      if(this.isUserLoggedIn){
+        this.$router.push('/');
+      }
+    }
   };
   </script>
   

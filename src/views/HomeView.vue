@@ -4,32 +4,32 @@
       <AddTask />
       <p v-if="incompleteTasks.length == 0">No tasks available yet</p>
       <div class="tasks-list">
-        <li class="task-item" v-for="task in incompleteTasks" :key="task.id">
+        <li class="task-item" v-for="task in incompleteTasks" :key="task._id">
           <span>
           <input 
             type="checkbox" 
             :checked="task.completed" 
-            @change="toggleTaskCompletion(task.id)" 
+            @change="toggleTaskCompletion(task._id)" 
           />
           <span>{{ task.title }}</span>
           </span>
-          <span class="material-symbols-outlined delete-icon" @click="deleteTask(task.id)">delete</span>
+          <span class="material-symbols-outlined delete-icon" @click="deleteTask(task._id)">delete</span>
         </li>
       </div>
       <h3 style="margin: 1rem 0 0">Completed Tasks</h3>
       <hr/>
       <p v-if="completedTasks.length == 0">No tasks completed yet</p>
       <div class="tasks-list">
-        <li class="task-item" v-for="task in completedTasks" :key="task.id">
+        <li class="task-item" v-for="task in completedTasks" :key="task._id">
           <span>
           <input 
           type="checkbox" 
           :checked="task.completed" 
-          @change="toggleTaskCompletion(task.id)" 
+          @change="toggleTaskCompletion(task._id)" 
           />
           <span class="task-title">{{ task.title }}</span>
           </span>
-          <span class="material-symbols-outlined delete-icon" @click="deleteTask(task.id)">delete</span>
+          <span class="material-symbols-outlined delete-icon" @click="deleteTask(task._id)">delete</span>
         </li>
       </div>
     </div>
@@ -61,7 +61,10 @@ export default {
     ...mapGetters(['isUserLoggedIn', 'completedTasks', 'incompleteTasks']), 
   },
   methods: {
-    ...mapActions(['toggleTaskCompletion', 'deleteTask']),
+    ...mapActions(['toggleTaskCompletion', 'deleteTask', 'getAllTask']),
+  },
+  mounted(){
+    if(this.isUserLoggedIn) this.getAllTask()
   }
 }
 </script>
