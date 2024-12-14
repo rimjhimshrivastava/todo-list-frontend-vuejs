@@ -4,7 +4,7 @@ import { createStore } from 'vuex';
 const store = createStore({
   state: {
     isUserLoggedIn: localStorage.getItem('isUserLoggedIn') === 'true' || false,
-    token: localStorage.getItem('token') || null,
+    token: localStorage.getItem('token') || null, // access token for user authentication
     tasksList: JSON.parse(localStorage.getItem('tasksList')) || [],
   },
   mutations: {
@@ -25,6 +25,7 @@ const store = createStore({
     },
   },
   actions: {
+    // Makes request for creating new user
     async signup({ commit }, token){
       try{
         const response = await apiClient.post('/auth/signup', token);
@@ -39,6 +40,8 @@ const store = createStore({
         }
       }
     },
+
+    // Makes request for Login of existing user
     async login({ commit }, token) {
       try{
         const response = await apiClient.post('/auth/login', token);
@@ -53,10 +56,14 @@ const store = createStore({
         }
       }
     },
+
+    // Logout existing user
     logout({ commit }) {
         commit('setLoginState', { isLoggedIn: false, token: null });
         commit('setTasksList', []); 
     },
+
+    // Fetches all tasks of current user 
     async getAllTask({ commit }){
       try{
         const response = await apiClient.get('/todo');
@@ -66,6 +73,8 @@ const store = createStore({
         return error;
       }
     },
+
+    // Creates new task for existing user
     async addNewTask({ commit }, task) {
       try{
         const response = await apiClient.post('/todo', {title: task})
@@ -76,6 +85,8 @@ const store = createStore({
         return error;
       }
     },
+
+    // Toggle task completion status of selected task
     async toggleTaskCompletion({ commit }, taskId) {
       try{
         const response = await apiClient.put(`/todo/${taskId}`)
@@ -86,6 +97,8 @@ const store = createStore({
         return error;
       }
     },
+
+    // Deletes selected task
     async deleteTask({ commit }, taskId) {
       try{
         const response = await apiClient.delete(`/todo/${taskId}`)
